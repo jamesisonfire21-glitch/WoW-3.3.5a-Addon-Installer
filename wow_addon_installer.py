@@ -1035,15 +1035,88 @@ def run_update(addons_dir):
 # Main menu
 # ──────────────────────────────────────────────────────────────────────────────
 
+CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".wow_addon_installer")
+
+
+def load_saved_dir():
+    """Return the previously saved AddOns directory, or None."""
+    try:
+        with open(CONFIG_FILE) as f:
+            path = f.read().strip()
+            return path if path else None
+    except FileNotFoundError:
+        return None
+
+
+def save_dir(path):
+    """Persist the chosen AddOns directory for future runs."""
+    try:
+        with open(CONFIG_FILE, "w") as f:
+            f.write(path)
+    except OSError:
+        pass
+
+
+def pick_folder_dialog(title="Select your WoW AddOns folder", initial=None):
+    """
+    Open a native OS folder-picker dialog using tkinter.
+    Returns the chosen path string, or None if cancelled / unavailable.
+    """
+    try:
+        import tkinter as tk
+        from tkinter import filedialog
+        root = tk.Tk()
+        root.withdraw()          # hide the root window
+        root.attributes("-topmost", True)
+        chosen = filedialog.askdirectory(
+            title=title,
+            initialdir=initial or os.path.expanduser("~"),
+        )
+        root.destroy()
+        return chosen if chosen else None
+    except Exception:
+        return None
+
+
 def resolve_dir(args_dir):
-    """Prompt for AddOns directory if not supplied, falling back to default."""
+    """
+    Determine the AddOns directory with this priority:
+      1. --dir flag
+      2. Saved config file  (~/.wow_addon_installer)
+      3. Native folder-picker dialog  (first run)
+      4. Manual text input fallback   (if tkinter unavailable)
+    """
+    # ── 1. CLI flag ────────────────────────────────────────────────────────
     if args_dir:
+        save_dir(args_dir)
         return args_dir
+
+    # ── 2. Previously saved directory ──────────────────────────────────────
+    saved = load_saved_dir()
+    if saved and os.path.isdir(saved):
+        return saved
+
+    # ── 3 & 4. First run — ask the user to choose ─────────────────────────
+    print()
+    cprint(BOLD + CYAN, "  Welcome! Please select your WoW AddOns folder.")
+    print()
+
+    chosen = pick_folder_dialog("Select your WoW Interface\\AddOns folder")
+
+    if chosen:
+        cprint(GREEN, f"  ✔ AddOns folder set to:\n    {chosen}")
+        save_dir(chosen)
+        return chosen
+
+    # Tkinter not available — fall back to text prompt
+    cprint(YELLOW, "  (Folder picker unavailable — please type the path instead)")
     raw = input(
-        f"\n{BOLD}  AddOns folder path{RESET} {DIM}(Enter = {DEFAULT_ADDON_DIR}){RESET}\n"
+        f"\n  {BOLD}AddOns folder path{RESET} {DIM}(Enter = {DEFAULT_ADDON_DIR}){RESET}\n"
         f"  {BOLD}> {RESET}"
     ).strip().strip('"').strip("'")
-    return raw if raw else DEFAULT_ADDON_DIR
+    path = raw if raw else DEFAULT_ADDON_DIR
+    save_dir(path)
+    return path
 
 
 def main_menu(install_dir):
@@ -1059,11 +1132,14 @@ def main_menu(install_dir):
     cprint(DIM, f"  AddOns folder: {install_dir}")
     print()
 
+    print(f"    {BOLD}3.{RESET}  Change AddOns folder")
+    print()
+
     while True:
-        choice = input(f"  {BOLD}Enter 1 or 2: {RESET}").strip()
-        if choice in ("1", "2"):
+        choice = input(f"  {BOLD}Enter 1, 2 or 3: {RESET}").strip()
+        if choice in ("1", "2", "3"):
             return choice
-        cprint(YELLOW, "  Please enter 1 or 2.")
+        cprint(YELLOW, "  Please enter 1, 2 or 3.")
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -1141,10 +1217,10 @@ Examples:
             # ── Option 1: Install ──────────────────────────────────────────
             print()
             cprint(DIM, f"  Default repo: github.com/NoM0Re/WoW-3.3.5a-Addons")
-            change = input(f"  {BOLD}Use a different AddOns folder? [y/N]: {RESET}").strip().lower()
+            change = input(f"  {BOLD}Use a different addons repo? [y/N]: {RESET}").strip().lower()
             if change in ("y", "yes"):
                 raw = input(
-                    f"  {BOLD}New AddOns folder path{RESET} {DIM}(Enter = keep current){RESET}\n"
+                    f"  {BOLD}New repo URL{RESET} {DIM}(Enter = keep current){RESET}\n"
                     f"  {BOLD}> {RESET}"
                 ).strip().strip('"').strip("'")
                 if raw:
@@ -1168,6 +1244,27 @@ Examples:
         elif choice == "2":
             # ── Option 2: Update ───────────────────────────────────────────
             run_update(install_dir)
+
+        elif choice == "3":
+            # ── Option 3: Change AddOns folder ────────────────────────────
+            print()
+            cprint(BOLD, "  Select a new AddOns folder:")
+            chosen = pick_folder_dialog("Select your WoW Interface\\AddOns folder",
+                                        initial=install_dir)
+            if chosen:
+                install_dir = chosen
+                save_dir(install_dir)
+                cprint(GREEN, f"\n  ✔ AddOns folder updated to:\n    {install_dir}")
+            else:
+                # Fall back to text input
+                raw = input(
+                    f"\n  {BOLD}New AddOns folder path{RESET} "
+                    f"{DIM}(Enter = keep current){RESET}\n"
+                    f"  {BOLD}> {RESET}"
+                ).strip().strip('"').strip("'")
+                if raw:
+                    install_dir = raw
+                    save_dir(install_dir)
 
         # ── After finishing, offer to return to menu or exit ──────────────
         print()

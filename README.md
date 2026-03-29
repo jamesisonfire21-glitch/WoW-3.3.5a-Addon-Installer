@@ -2,10 +2,19 @@
 
 A command-line tool for installing and updating World of Warcraft addons. By default it pulls from [NoM0Re's WoW-3.3.5a-Addons](https://github.com/NoM0Re/WoW-3.3.5a-Addons) repository, but you can point it at any other addon repo by pasting a different download URL when prompted. Features a full-screen interactive picker, smart extraction, automatic update checking via the GitHub API, and a Lich King terminal banner because why not.
 
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-support%20development-yellow?style=for-the-badge&logo=buy-me-a-coffee)](https://buymeacoffee.com/jamesisonfire)
+
+---
+
+## Screenshots
+
+![WoW Addon Installer — main menu and addon picker](screenshot.svg)
+
 ---
 
 ## Features
 
+- **Native folder picker** — on first launch a folder browser dialog opens so you can select your AddOns directory without typing a path; the choice is saved for future runs
 - **Interactive curses UI** — navigate with arrow keys, tick addons with Space, search with `/`
 - **Install addons** — browse and select from 100+ catalogued addons, with the option to use a different repo URL at install time
 - **Custom repos** — not limited to NoM0Re's repo; paste any direct GitHub download link when prompted and the tool will download, extract, and name it correctly
@@ -46,7 +55,9 @@ Download `wow_addon_installer.py` and run it directly — no other files needed.
 python wow_addon_installer.py
 ```
 
-The first time you run it, it will ask for your AddOns folder path. To skip this prompt, set your default directory at the top of the file:
+**First run:** a native folder picker dialog opens automatically so you can browse to your `Interface\AddOns` folder. The path is saved to `~/.wow_addon_installer` and reused on every subsequent launch — no prompt needed.
+
+If you'd rather set a hardcoded default, edit this line near the top of the file:
 
 ```python
 DEFAULT_ADDON_DIR = r"D:\Lich King\Interface\AddOns"
@@ -67,6 +78,7 @@ On launch you'll see the main menu:
 ```
   1.  Install addons
   2.  Update installed addons
+  3.  Change AddOns folder
 ```
 
 **Option 1 — Install:**
@@ -80,6 +92,10 @@ On launch you'll see the main menu:
 - Fetches the latest commit date from GitHub for each one
 - Shows what has updates available vs what's already current
 - Lets you update all, pick specific ones via the curses picker, or cancel
+
+**Option 3 — Change AddOns folder:**
+- Opens the folder picker dialog again to select a different directory
+- Saves the new path for future runs
 
 ### Command-line flags
 
@@ -160,3 +176,11 @@ Folder names are always cleaned — suffixes like `-main`, `-master`, and `-335`
 ## Credits
 
 Addon repository maintained by [NoM0Re](https://github.com/NoM0Re/WoW-3.3.5a-Addons).
+
+---
+
+## Support
+
+If this tool saves you some time, a coffee is always appreciated!
+
+[![Buy Me A Coffee](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://buymeacoffee.com/jamesisonfire)
