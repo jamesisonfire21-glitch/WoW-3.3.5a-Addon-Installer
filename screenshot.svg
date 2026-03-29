@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="830">
+<rect width="780" height="830" fill="#0d1117" rx="12"/>
+<rect width="780" height="34" fill="#161b22" rx="12"/>
+<rect y="17" width="780" height="17" fill="#161b22"/>
+<circle cx="18" cy="17" r="6" fill="#ff5f56"/>
+<circle cx="40" cy="17" r="6" fill="#ffbd2e"/>
+<circle cx="62" cy="17" r="6" fill="#27c93f"/>
+<text x="390" y="21" text-anchor="middle" fill="#484f58" font-size="11" font-family="Cascadia Code, Consolas, Lucida Console, monospace">wow_addon_installer.py</text>
+<line x1="20" y1="353" x2="760" y2="353" stroke="#484f58" stroke-width="1" stroke-dasharray="5,5" opacity="0.4"/>
+<text x="390" y="351" text-anchor="middle" fill="#484f58" font-size="10" font-family="Cascadia Code, Consolas, Lucida Console, monospace">─── addon picker ───</text>
+<text x="35.64" y="61" fill="#39c5cf" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace">WoW 3.3.5a Addon Installer</text>
+<text x="35.64" y="81" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">github.com/NoM0Re/WoW-3.3.5a-Addons</text>
+<text x="35.64" y="121" fill="#39c5cf" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">╔════════════════════════════════════════════════════╗</text>
+<text x="35.64" y="141" fill="#39c5cf" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">║  What would you like to do?                  ║</text>
+<text x="35.64" y="161" fill="#39c5cf" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">╚════════════════════════════════════════════════════╝</text>
+<text x="51.28" y="201" fill="#ffffff" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace">1.</text>
+<text x="74.74000000000001" y="201" fill="#e6edf3" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">Install addons</text>
+<text x="51.28" y="221" fill="#ffffff" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace">2.</text>
+<text x="74.74000000000001" y="221" fill="#e6edf3" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">Update installed addons</text>
+<text x="35.64" y="261" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">AddOns folder: D:\Lich King\Interface\AddOns</text>
+<text x="35.64" y="301" fill="#e6edf3" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">Enter 1 or 2:</text>
+<text x="145.12" y="301" fill="#39c5cf" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace">_</text>
+<text x="20.0" y="381" fill="#39c5cf" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> WoW 3.3.5a Addon Installer  │  Space=tick  A=all  /=search  Enter=install  Q=quit</text>
+<text x="20.0" y="401" fill="#39c5cf" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> 7 addons selected of 101</text>
+<text x="20.0" y="421" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">───────────────────────────────────────────────────────────────────────────────────────────────────</text>
+<text x="20.0" y="441" fill="#3fb950" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [x] ACP                     Addon Control Panel – manage addons in-game</text>
+<text x="20.0" y="461" fill="#3fb950" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [x] Talented                Replacement Talent UI with extra features</text>
+<text x="20.0" y="481" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] Critline                Remembers your highest hits and crits</text>
+<text x="20.0" y="501" fill="#3fb950" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [x] GearScoreLite           Lightweight GearScore without a database</text>
+<text x="20.0" y="521" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] GearScore               Full GearScore with player database</text>
+<text x="20.0" y="541" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] AtlasLoot               Browse loot tables of bosses in-game</text>
+<text x="20.0" y="561" fill="#3fb950" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [x] DBM-Warmane             Deadly Boss Mods for Warmane</text>
+<text x="20.0" y="581" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] Skada                   Lightweight modular damage meter</text>
+<text x="20.0" y="601" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] Details                 Details! Damage Meter</text>
+<text x="20.0" y="621" fill="#3fb950" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [x] Omen                    Threat meter</text>
+<text x="20.0" y="641" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] TurnIn                  Auto-accepts and turns in quests</text>
+<text x="20.0" y="661" fill="#3fb950" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [x] Questie                 Quest tracker with map objectives</text>
+<text x="20.0" y="681" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] QuestHelper             Fastest quest completion paths</text>
+<rect x="20" y="688" width="740" height="20" fill="#21262d"/>
+<text x="20.0" y="701" fill="#e3b341" font-size="13" font-weight="bold" font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] Carbonite               Google-style map + quest helper</text>
+<text x="20.0" y="721" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] Mapster                 Simple world map enhancement</text>
+<text x="20.0" y="741" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> [ ] Gatherer                Remembers herb/ore node locations  [RAR]</text>
+<text x="20.0" y="761" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace">───────────────────────────────────────────────────────────────────────────────────────────────────</text>
+<text x="20.0" y="781" fill="#484f58" font-size="13"  font-family="Cascadia Code, Consolas, Lucida Console, monospace"> Press / to search</text>
+</svg>
