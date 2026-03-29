@@ -470,6 +470,88 @@ def extract_archive(archive_path, addon_name, addons_dir):
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# Custom repo parsing
+# ──────────────────────────────────────────────────────────────────────────────
+
+def fetch_repo_readme(repo_url):
+    """
+    Given a GitHub repo URL (e.g. https://github.com/Owner/Repo),
+    fetch the raw README.md content. Returns the text or None on failure.
+    """
+    # Normalise: strip trailing slash / .git
+    base = repo_url.rstrip("/").removesuffix(".git")
+    # Try common branch names
+    for branch in ("main", "master"):
+        raw_url = base.replace("github.com", "raw.githubusercontent.com") + f"/{branch}/README.md"
+        try:
+            req = urllib.request.Request(raw_url, headers={"User-Agent": "WoW-Addon-Installer/1.0"})
+            with urllib.request.urlopen(req, timeout=10) as r:
+                return r.read().decode("utf-8", errors="replace")
+        except Exception:
+            continue
+    return None
+
+
+def parse_repo_readme(readme_text, repo_url):
+    """
+    Parse a NoM0Re-style README and extract addon (name, description, url) tuples.
+
+    Expected pattern per addon:
+        ## Addon Name
+        Short description text.
+        [Download](https://...)
+    """
+    addons = []
+    # Split on ## headings
+    sections = re.split(r"^##\s+", readme_text, flags=re.MULTILINE)
+    for section in sections[1:]:   # skip preamble before first ##
+        lines = section.strip().splitlines()
+        if not lines:
+            continue
+        name = lines[0].strip()
+        # Skip non-addon headings (How to install, Partners, etc.)
+        if len(name) > 60 or name.lower().startswith(("how to", "partner", "important", "addon list")):
+            continue
+        # Extract first [Download](...) link
+        dl_match = re.search(r"\[Download[^\]]*\]\((https?://[^)]+)\)", section, re.IGNORECASE)
+        if not dl_match:
+            continue
+        url = dl_match.group(1)
+        if not (url.endswith(".zip") or url.endswith(".rar")):
+            continue
+        # Description: first non-empty line after the heading that isn't a link or image
+        desc = ""
+        for line in lines[1:]:
+            line = line.strip()
+            if line and not line.startswith(("[", "!", "#", "**")):
+                desc = line[:80]
+                break
+        addons.append((name, desc, url))
+    return addons
+
+
+def load_custom_repo(repo_url):
+    """
+    Fetch and parse a custom repo README, returning a list of addon tuples.
+    Prints progress and errors. Returns [] on failure.
+    """
+    print(f"  {DIM}Fetching addon list from {repo_url}…{RESET}")
+    readme = fetch_repo_readme(repo_url)
+    if not readme:
+        cprint(RED, f"  ✘ Could not fetch README from {repo_url}")
+        cprint(DIM, "  Make sure the URL points to a GitHub repo root, e.g.:")
+        cprint(DIM, "    https://github.com/NoM0Re/WoW-3.3.5a-Addons")
+        return []
+    addons = parse_repo_readme(readme, repo_url)
+    if not addons:
+        cprint(YELLOW, "  ⚠ No addons found in that repo's README.")
+        cprint(DIM, "  The repo README must use ## headings with [Download](...) links.")
+        return []
+    cprint(GREEN, f"  ✔ Found {len(addons)} addon(s) in that repo.")
+    return addons
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # Interactive checkbox selection (curses UI)
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -1218,28 +1300,53 @@ Examples:
             print()
             cprint(DIM, f"  Default repo: github.com/NoM0Re/WoW-3.3.5a-Addons")
             change = input(f"  {BOLD}Use a different addons repo? [y/N]: {RESET}").strip().lower()
+
+            # repo_url is separate from install_dir — one is where files come from,
+            # the other is where they get installed to
+            repo_url = None
             if change in ("y", "yes"):
                 raw = input(
                     f"  {BOLD}New repo URL{RESET} {DIM}(Enter = keep current){RESET}\n"
                     f"  {BOLD}> {RESET}"
                 ).strip().strip('"').strip("'")
                 if raw:
-                    install_dir = raw
+                    repo_url = raw
 
-            selected = prompt_selection()
-
-            if not selected:
-                cprint(YELLOW, "\n  No addons selected.")
+            if repo_url:
+                # Custom repo — fetch its README and parse the addon list
+                print()
+                custom_addons = load_custom_repo(repo_url)
+                if not custom_addons:
+                    pass   # error already printed
+                else:
+                    selected = curses.wrapper(_curses_picker, custom_addons)
+                    if not selected:
+                        cprint(YELLOW, "\n  No addons selected.")
+                    else:
+                        print()
+                        cprint(BOLD, f"  About to install {len(selected)} addon(s) into:")
+                        cprint(CYAN, f"  {install_dir}\n")
+                        for name, _, _ in selected:
+                            print(f"    • {name}")
+                        print()
+                        confirm = input(f"  {BOLD}Proceed? [Y/n]: {RESET}").strip().lower()
+                        if confirm in ("", "y", "yes"):
+                            install_addons(selected, install_dir)
             else:
-                print()
-                cprint(BOLD, f"  About to install {len(selected)} addon(s) into:")
-                cprint(CYAN, f"  {install_dir}\n")
-                for name, _, _ in selected:
-                    print(f"    • {name}")
-                print()
-                confirm = input(f"  {BOLD}Proceed? [Y/n]: {RESET}").strip().lower()
-                if confirm in ("", "y", "yes"):
-                    install_addons(selected, install_dir)
+                selected = prompt_selection()
+
+                if not selected:
+                    cprint(YELLOW, "\n  No addons selected.")
+                else:
+                    print()
+                    cprint(BOLD, f"  About to install {len(selected)} addon(s) into:")
+                    cprint(CYAN, f"  {install_dir}\n")
+                    for name, _, _ in selected:
+                        print(f"    • {name}")
+                    print()
+                    confirm = input(f"  {BOLD}Proceed? [Y/n]: {RESET}").strip().lower()
+                    if confirm in ("", "y", "yes"):
+                        install_addons(selected, install_dir)
 
         elif choice == "2":
             # ── Option 2: Update ───────────────────────────────────────────
